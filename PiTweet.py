@@ -3,6 +3,7 @@
 import sys
 import os
 from twython import Twython
+from datetime import timedelta
 
 FILE_PATH = '/Users/ling/Google Drive/MyCode/RaspberryPi'
 
@@ -17,7 +18,12 @@ APP_SECRET = twitterAPIKey[1].split('=')[1].strip()
 OAUTH_TOKEN = twitterAPIKey[2].split('=')[1].strip()
 OAUTH_TOKEN_SECRET = twitterAPIKey[3].split('=')[1].strip()
 
-# print APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET #for debug
-
+# Create a Twython instance with keys and tokens
 twitter = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
-twitter.update_status(status='This tweet is brought to you by Twython!')
+
+# Calculate uptime of the host
+uptimeSec = open('/proc/uptime', 'r').readline().split()[0]
+uptimeStatus = str(timedelta(seconds=float(uptimeSec)))
+
+# Send twitter update status
+twitter.update_status(status='This Raspberry Pi has been up for ' + uptimeStatus)
